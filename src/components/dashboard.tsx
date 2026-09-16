@@ -207,6 +207,11 @@ export default function Dashboard() {
             )}
             <ScanButton scanning={scanning} onClick={runScan} small />
           </div>
+          {error && data && (
+            <div className="mt-3 rounded-lg border border-amber/30 bg-amber/5 px-3 py-2 text-xs text-amber" role="status">
+              A busca não encontrou tarifas Travelpayouts para a janela configurada. Os dados exibidos são da última varredura válida.
+            </div>
+          )}
         </div>
       </header>
 
