@@ -8,10 +8,8 @@ import { db } from "@/db";
 import { offers, scans } from "@/db/schema";
 import { desc } from "drizzle-orm";
 import { buildCombos } from "./dates";
-import { amadeusProvider, hasAmadeusKeys } from "./providers/amadeus";
-import { marketProvider } from "./providers/market";
 import { hasTravelpayoutsToken, travelpayoutsProvider } from "./providers/travelpayouts";
-import type { Provider, ScanResult } from "./providers/types";
+import type { ScanResult } from "./providers/types";
 
 export interface RunScanOutput {
   scanId: number;
@@ -26,28 +24,11 @@ export async function runScan(at: Date = new Date()): Promise<RunScanOutput> {
   const t0 = Date.now();
   const combos = buildCombos();
 
-  // Cadeia de provedores: dados reais primeiro (Travelpayouts → Amadeus),
-  // motor de mercado calibrado como fallback garantido.
-  const chain: Provider[] = [];
-  if (hasTravelpayoutsToken()) chain.push(travelpayoutsProvider);
-  if (hasAmadeusKeys()) chain.push(amadeusProvider);
+  if (!hasTravelpayoutsToken()) {
+    throw new Error("TRAVELPAYOUTS_TOKEN não configurado");
+  }
 
-  let result: ScanResult | null = null;
-  const errors: string[] = [];
-  for (const provider of chain) {
-    try {
-      result = await provider.scan(combos, at);
-      break;
-    } catch (e) {
-      errors.push(`${provider.name}: ${(e as Error).message}`);
-    }
-  }
-  if (!result) {
-    result = await marketProvider.scan(combos, at);
-    if (errors.length) {
-      result.note = `Fontes externas indisponíveis (${errors.join(" · ")}) — usando motor de mercado calibrado.`;
-    }
-  }
+  const result: ScanResult = await travelpayoutsProvider.scan(combos, at);
 
   const durationMs = Math.max(Date.now() - t0, 1);
   const finishedAt = new Date(at.getTime() + durationMs);

@@ -137,14 +137,9 @@ const PROVIDER_META: Record<string, { label: string; tip: string; real: boolean 
     tip: "Preços reais encontrados por usuários Aviasales nas últimas ~48h — cache, não cotação reservável.",
     real: true,
   },
-  amadeus: {
-    label: "AMADEUS ENTERPRISE · TEMPO REAL",
-    tip: "Tarifas reais de disponibilidade via Amadeus Enterprise API.",
-    real: true,
-  },
   market: {
-    label: "MERCADO CALIBRADO · KAYAK/DECOLAR/SKYSCANNER",
-    tip: "Motor calibrado com dados públicos reais da rota. Configure TRAVELPAYOUTS_TOKEN (grátis) para tarifas reais cacheadas.",
+    label: "SEM DADOS TRAVELPAYOUTS",
+    tip: "Nenhuma tarifa Travelpayouts disponível. Novas varreduras não usam dados simulados.",
     real: false,
   },
 };

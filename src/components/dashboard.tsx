@@ -38,7 +38,7 @@ interface DashboardResponse {
   latest: ScanSummary | null;
   offers: OfferWithDelta[];
   pulse: PulsePoint[];
-  integrations: { travelpayouts: boolean; amadeus: boolean };
+  integrations: { travelpayouts: boolean };
 }
 
 type BagFilter = "all" | "with" | "without";
@@ -556,9 +556,7 @@ export default function Dashboard() {
                 </div>
                 {latest?.provider === "travelpayouts"
                   ? "Travelpayouts Data API — tarifas reais em cache (buscas Aviasales ~48h); bagagem classificada pela política típica da companhia."
-                  : latest?.provider === "amadeus"
-                    ? "Amadeus Enterprise API (tarifas reais de disponibilidade em tempo real)."
-                    : "Motor calibrado com tarifas públicas reais GRU–LON (KAYAK/Decolar/Skyscanner). Ative TRAVELPAYOUTS_TOKEN (grátis) para tarifas reais cacheadas."}{" "}
+                  : "Nenhuma varredura Travelpayouts disponível. Configure TRAVELPAYOUTS_TOKEN e execute uma nova varredura."}{" "}
                 Confirme o preço final no link de cada oferta — tarifas mudam até a emissão.
               </div>
             </footer>
