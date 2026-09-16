@@ -114,9 +114,11 @@ export default function Dashboard() {
       const res = await fetch("/api/scans", { method: "POST" });
       if (res.status === 429) {
         // varredura muito recente — apenas recarrega
-      } else if (!res.ok) {
+      } else {
         const j = await res.json().catch(() => ({}));
-        throw new Error((j as { error?: string }).error ?? `HTTP ${res.status}`);
+        if (!res.ok || (j as { available?: boolean }).available === false) {
+          throw new Error((j as { error?: string }).error ?? `HTTP ${res.status}`);
+        }
       }
       await minDelay;
       await load();

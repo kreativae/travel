@@ -8,7 +8,17 @@ export async function GET() {
     const data = await getDashboard();
     return Response.json({ scans: data.scans });
   } catch (e) {
-    return Response.json({ error: (e as Error).message }, { status: 500 });
+    const message = (e as Error).message;
+    if (message.includes("nenhuma tarifa cacheada")) {
+      return Response.json(
+        {
+          available: false,
+          error: message,
+        },
+        { status: 200 }
+      );
+    }
+    return Response.json({ error: message }, { status: 500 });
   }
 }
 
