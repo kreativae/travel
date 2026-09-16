@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "if [ -n \"$DATABASE_URL\" ]; then npm run db:push; fi && next build",
+    "db:push": "drizzle-kit push --config=drizzle.config.ts",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"
