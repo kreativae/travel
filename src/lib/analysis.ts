@@ -40,6 +40,7 @@ export async function getDashboard(): Promise<DashboardData> {
            duration_ms AS "durationMs",
            note
     FROM scans
+    WHERE provider = 'travelpayouts'
     ORDER BY id DESC
     LIMIT 60
   `);
@@ -104,6 +105,7 @@ export async function getDashboard(): Promise<DashboardData> {
            ) x) AS "avgTop10",
            s.offers_count AS offers
     FROM scans s
+    WHERE s.provider = 'travelpayouts'
     ORDER BY s.id DESC
     LIMIT 14
   `);
@@ -137,7 +139,7 @@ export async function getRouteHistory(routeKey: string): Promise<HistoryPoint[]>
            o.price::float AS price
     FROM offers o
     JOIN scans s ON s.id = o.scan_id
-    WHERE o.route_key = ${routeKey}
+    WHERE o.route_key = ${routeKey} AND s.provider = 'travelpayouts'
     ORDER BY o.scan_id ASC
   `);
   const points: HistoryPoint[] = [];
